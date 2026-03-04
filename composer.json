@@ -11,18 +11,30 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
+<<<<<<< HEAD
+=======
+        "laravel/sanctum": "^4.0",
+>>>>>>> c2c4e2082a3b629dcc5e9f32ee58a991798205af
         "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+<<<<<<< HEAD
         "laravel/boost": "^1.8",
+=======
+>>>>>>> c2c4e2082a3b629dcc5e9f32ee58a991798205af
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
+<<<<<<< HEAD
         "pestphp/pest": "^4.3",
         "pestphp/pest-plugin-laravel": "^4.0"
+=======
+        "pestphp/pest": "^4.4",
+        "pestphp/pest-plugin-laravel": "^4.1"
+>>>>>>> c2c4e2082a3b629dcc5e9f32ee58a991798205af
     },
     "autoload": {
         "psr-4": {
@@ -47,7 +59,11 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
+<<<<<<< HEAD
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+=======
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+>>>>>>> c2c4e2082a3b629dcc5e9f32ee58a991798205af
         ],
         "test": [
             "@php artisan config:clear --ansi",
@@ -58,8 +74,12 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
+<<<<<<< HEAD
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "@php artisan boost:update --ansi"
+=======
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+>>>>>>> c2c4e2082a3b629dcc5e9f32ee58a991798205af
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -89,4 +109,8 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c2c4e2082a3b629dcc5e9f32ee58a991798205af
