@@ -24,4 +24,11 @@ class BookController extends Controller
 
         return response()->json(BookResource::collection($books));
     }
+
+    public function show(Book $book)
+    {
+        $this->authorize('view', $book);
+
+        return response()->json(BookResource::make($book));
+    }
 }
