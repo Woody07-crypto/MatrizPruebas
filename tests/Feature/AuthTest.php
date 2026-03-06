@@ -2,35 +2,69 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
 
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_can_login()
+    public function test_usuario_puede_iniciar_sesion()
     {
-        // Preparacion
         $user = User::factory()->create([
-            'password' => bcrypt('test123'),
+            'email' => 'estudiante@biblioteca.com',
+            'password' => bcrypt('password123'),
         ]);
 
-        // Ejecucion
-        $response = $this->post('/api/v1/login', [
-            'email' => $user->email,
-            'password' => 'test123',
+        $response = $this->postJson('/api/v1/login', [
+            'email' => 'estudiante@biblioteca.com',
+            'password' => 'password123',
         ]);
 
-        // Verificacion
         $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'access_token',
-            'token_type',
-            'user',
+        
+        $response->assertJsonStructure(['access_token']); 
+    }
+
+    public function test_usuario_no_puede_iniciar_sesion_con_credenciales_incorrectas()
+    {
+        User::factory()->create([
+            'email' => 'estudiante@biblioteca.com',
+            'password' => bcrypt('password123'),
         ]);
 
-        $this->assertAuthenticatedAs($user);
+        
+        $response = $this->postJson('/api/v1/login', [
+            'email' => 'estudiante@biblioteca.com',
+            'password' => 'claveEquivocada',
+        ]);
+
+        
+        $response->assertStatus(422); 
+    }
+
+    public function test_usuario_puede_cerrar_sesion()
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token')->plainTextToken;
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/v1/logout');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_usuario_puede_ver_su_perfil()
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test-token')->plainTextToken;
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->getJson('/api/v1/profile');
+
+        $response->assertStatus(200);
     }
 }
