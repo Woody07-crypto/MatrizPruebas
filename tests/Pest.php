@@ -26,7 +26,7 @@ pest()->extend(Tests\TestCase::class)
 |
 */
 
-expect()->extend('toBeOne', function () {
+expect()->extend('toBeOne', function (): bool {
     return $this->toBe(1);
 });
 
