@@ -12,7 +12,7 @@ class StoreLoanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->hasRole('profesor') || $this->user()->hasRole('bibliotecario');
+        return $this->user()->hasRole('docente') || $this->user()->hasRole('bibliotecario');
     }
 
     /**
