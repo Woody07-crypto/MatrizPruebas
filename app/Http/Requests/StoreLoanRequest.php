@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Spatie\Permission\Traits\HasRoles;
 
 class StoreLoanRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreLoanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->hasRole('profesor') || $this->user()->hasRole('bibliotecario');
     }
 
     /**
