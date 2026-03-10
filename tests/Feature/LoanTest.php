@@ -1,63 +1,40 @@
 <?php
 
-namespace Tests\Feature;
-
-use App\Models\Book;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
-use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
-use Tests\TestCase;
 
-class LoanTest extends TestCase
-{
-    use RefreshDatabase;
+beforeEach(function () {
+    Role::firstOrCreate(['name' => 'estudiante', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'profesor', 'guard_name' => 'web']);
+    Role::firstOrCreate(['name' => 'bibliotecario', 'guard_name' => 'web']);
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        config(['app.key' => Str::random(32)]);
-        Role::firstOrCreate(['name' => 'estudiante', 'guard_name' => 'web']);
-        Role::firstOrCreate(['name' => 'profesor', 'guard_name' => 'web']);
-        Role::firstOrCreate(['name' => 'bibliotecario', 'guard_name' => 'web']);
-    }
+test('Loan', function () {
+    $response = $this->get('');
+    $response->assertStatus(200);
+});
 
-    #[Test]
-    public function aplicacion_responde_200_en_raiz(): void
-    {
-        $response = $this->get('/');
-        $response->assertStatus(200);
-    }
+it ('can make a loan', function (){
+    $response = $this -> post ('/loans', [
+        'name' => 'John Doe',
+        'book_id' => 1,
+    ]);
+    $response->assertStatus(200);
+    $response -> assertJson([
+        'message' => 'Loan created successfully', 
+    ]);
 
-    #[Test]
-    public function bibliotecario_puede_crear_prestamo_devuelve_201(): void
-    {
-        $book = Book::factory()->create([
-            'total_copies' => 3,
-            'available_copies' => 2,
-            'is_available' => true,
-        ]);
+});
 
-        $user = User::factory()->create();
-        $user->assignRole('bibliotecario');
+it ('cannot list loans if student role', function (){
 
-        $response = $this->actingAs($user)->postJson('/api/v1/loans', [
-            'requester_name' => 'John Doe',
-            'book_id' => $book->id,
-        ]);
+    $user = User::factory()->create()->assignRole('estudiante');
 
-        $response->assertStatus(201);
-    }
+    $response = $this -> actingAs($user) -> getJson('/loans');
+    $response->assertStatus(403);
+    $response->assertJson([
+        'message' => 'Unauthorized',
+    ]);
 
-    #[Test]
-    public function estudiante_no_puede_listar_prestamos_devuelve_403(): void
-    {
-        $user = User::factory()->create();
-        $user->assignRole('estudiante');
+});
 
-        $response = $this->actingAs($user)->getJson('/api/v1/loans');
-
-        $response->assertStatus(403);
-    }
-}

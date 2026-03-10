@@ -56,3 +56,9 @@ it('crea_prestamo_correctamente_cuando_hay_copias', function () {
         ->and($book->is_available)->toBeTrue();
 });
 
+it('no_permite_devolver_libro_inexistente')->skip('Pendiente de implementar lógica de devolución');
+
+it('no_permite_devolver_con_datos_invalidos')->skip('Pendiente de implementar lógica de devolución');
+
+it('permite_devolver_prestamo_activo_correctamente')->skip('Pendiente de implementar lógica de devolución');
+
