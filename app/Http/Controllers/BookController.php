@@ -24,4 +24,61 @@ class BookController extends Controller
 
         return response()->json(BookResource::collection($books));
     }
+
+    public function show(Book $book)
+    {
+        $this->authorize('view', $book);
+
+        return response()->json(BookResource::make($book));
+    }
+
+    public function store(Request $request)
+    {
+        $this->authorize('create', Book::class);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'ISBN' => 'required|string|max:255|unique:books,ISBN',
+            'total_copies' => 'required|integer|min:1',
+        ]);
+
+        $book = Book::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'ISBN' => $validated['ISBN'],
+            'total_copies' => $validated['total_copies'],
+            'available_copies' => $validated['total_copies'],
+            'is_available' => true,
+        ]);
+
+        return response()->json(BookResource::make($book), 201);
+    }
+
+    public function update(Request $request, Book $book)
+    {
+        $this->authorize('update', $book);
+
+        $validated = $request->validate([
+            'title' => 'sometimes|string|max:255',
+            'description' => 'sometimes|nullable|string',
+            'ISBN' => 'sometimes|string|max:255|unique:books,ISBN,' . $book->id,
+            'total_copies' => 'sometimes|integer|min:1',
+            'available_copies' => 'sometimes|integer|min:0',
+            'is_available' => 'sometimes|boolean',
+        ]);
+
+        $book->update($validated);
+
+        return response()->json(BookResource::make($book));
+    }
+
+    public function destroy(Book $book)
+    {
+        $this->authorize('delete', $book);
+
+        $book->delete();
+
+        return response()->json(null, 204);
+    }
 }
