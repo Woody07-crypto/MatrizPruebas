@@ -13,8 +13,7 @@ class BookResourceTest extends TestCase
     #[Test]
     public function transforma_libro_a_array_con_estructura_de_detalle(): void
     {
-        $book = new Book([
-            'id' => 1,
+        $book = Book::factory()->make([
             'title' => 'Cien años de soledad',
             'description' => 'Novela de García Márquez',
             'ISBN' => '978-3-16-148410-0',
@@ -22,6 +21,7 @@ class BookResourceTest extends TestCase
             'available_copies' => 7,
             'is_available' => true,
         ]);
+        $book->id = 1;
 
         $resource = new BookResource($book);
         $request = Request::create('/');

@@ -2,7 +2,10 @@
 
 use App\Models\User;
 use App\Policies\LoanPolicy;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Role::firstOrCreate(['name' => 'estudiante', 'guard_name' => 'web']);

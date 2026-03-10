@@ -18,6 +18,10 @@ class Book extends Model
         'is_available',
     ];
 
+    protected $casts = [
+        'is_available' => 'bool',
+    ];
+
     public function loans()
     {
         return $this->hasMany(Loan::class);
